@@ -26,8 +26,8 @@ type Server struct {
 	errorHandler   handleErrorFunc
 }
 
-// NewServer returns a server, options is optional to pass
-func NewServer(options ...*Options) *Server {
+// New returns a server, options is optional to pass
+func New(options ...*Options) *Server {
 	opts := defaultOptions()
 	if len(options) > 0 {
 		opts = options[0]
