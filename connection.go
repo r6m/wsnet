@@ -15,6 +15,7 @@ var connID uint32
 // Connection is a wrapper for Conn
 type Connection struct {
 	sync.Mutex
+	values         *sync.Map
 	id             uint32
 	server         *Server
 	conn           *websocket.Conn
@@ -27,6 +28,7 @@ func newConnection(server *Server, conn *websocket.Conn) *Connection {
 	atomic.AddUint32(&connID, 1)
 	return &Connection{
 		id:             connID,
+		values:         &sync.Map{},
 		server:         server,
 		conn:           conn,
 		outgoingCh:     make(chan []byte, server.options.OutgoinSize),
@@ -37,6 +39,9 @@ func newConnection(server *Server, conn *websocket.Conn) *Connection {
 
 // ID returns the connection id
 func (c *Connection) ID() uint32 { return c.id }
+
+// Values returns connection values
+func (c *Connection) Values() *sync.Map { return c.values }
 
 // Send marshals the interface using serializer
 func (c *Connection) Send(i interface{}) error {
